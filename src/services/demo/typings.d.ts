@@ -30,6 +30,7 @@ declare namespace API {
     success?: boolean;
     errorMessage?: string;
     data?: PageInfo_UserInfo_;
+    total?: number;
   }
 
   interface Result_UserInfo_ {

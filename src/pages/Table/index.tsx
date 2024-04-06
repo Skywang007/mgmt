@@ -83,21 +83,23 @@ const handleRemove = async (selectedRows: API.UserInfo[]) => {
 };
 
 const TableList: React.FC<unknown> = () => {
-  const [createModalVisible, handleModalVisible] = useState<boolean>(false);
+  const [createModalVisible, handleModalVisible] = useState<boolean>(true);
   const [updateModalVisible, handleUpdateModalVisible] =
     useState<boolean>(false);
   const [stepFormValues, setStepFormValues] = useState({});
   const actionRef = useRef<ActionType>();
   const [row, setRow] = useState<API.UserInfo>();
   const [selectedRowsState, setSelectedRows] = useState<API.UserInfo[]>([]);
+
   const columns: ProDescriptionsItemProps<API.UserInfo>[] = [
     {
       title: 'id',
-      dataIndex: 'id',
+      dataIndex: 'nid',
+      search:false
     },
     {
       title: '名称',
-      dataIndex: 'name',
+      dataIndex: 'title',
       tip: '名称是唯一的 key',
       // formItemProps: {
       //   rules: [
@@ -110,12 +112,23 @@ const TableList: React.FC<unknown> = () => {
     },
     {
       title: '企业类型',
-      dataIndex: 'name',
+      dataIndex: 'qylx',
       valueType: 'text',
+      valueEnum: {
+        种植户: { text: '种植户', status: '种植户' },
+        个体工商户: { text: '个体工商户', status: '个体工商户' },
+        农民专业合作社: { text: '农民专业合作社', status: '农民专业合作社' },
+        企业: { text: '企业', status: '企业' },
+        有限责任公司: { text: '有限责任公司', status: '有限责任公司' },
+      },
     },
     {
       title: '企业性质',
-      dataIndex: 'name',
+      dataIndex: 'qyxz',
+      valueEnum: {
+        种植: { text: '种植', status: '种植' },
+        种植和加工: { text: '种植和加工', status: '种植和加工' },
+      },
     },
     {
       title: '认证',
@@ -129,23 +142,21 @@ const TableList: React.FC<unknown> = () => {
     },
     {
       title: '联系人',
-      dataIndex: 'name',
+      dataIndex: 'lxr',
       valueType: 'text',
       search: false,
     },
     {
       title: '联系电话',
-      dataIndex: 'name',
+      dataIndex: 'lxphone',
       valueType: 'text',
-      search: false,
     },
     {
       title: '位置',
-      dataIndex: 'id',
+      dataIndex: 'address',
       valueType: 'text',
       search: false,
       render: (data, rowdata) => {
-        console.log('render=>', data, rowdata);
         return <div>{data}</div>;
       },
     },
@@ -209,16 +220,14 @@ const TableList: React.FC<unknown> = () => {
           </Button>,
         ]}
         request={async (params, sorter, filter) => {
-          const { data, success } = await queryUserList({
+          console.log('request', {...params});
+          const { data, success,total } = await queryUserList({
             ...params,
-            // FIXME: remove @ts-ignore
-            // @ts-ignore
-            sorter,
-            filter,
           });
           return {
-            data: data?.list || [],
+            data: data || [],
             success,
+            total:total
           };
         }}
         columns={columns as any}

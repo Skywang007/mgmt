@@ -4,23 +4,39 @@ import { request } from '@umijs/max';
 
 /** 此处后端没有提供注释 GET /api/v1/queryUserList */
 export async function queryUserList(
-  params: {
-    // query
-    /** keyword */
-    keyword?: string;
-    /** current */
-    current?: number;
-    /** pageSize */
-    pageSize?: number;
-  },
-  options?: { [key: string]: any },
+  body?: any,
 ) {
-  return request<API.Result_PageInfo_UserInfo__>('/api/v1/queryUserList', {
-    method: 'GET',
-    params: {
-      ...params,
+  return request<API.Result_PageInfo_UserInfo__>('/api/v1/queryCirculate', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
     },
-    ...(options || {}),
+    data: body,
+    // ...(options || {}),
+  });
+}
+export async function queryDetail(
+  params?: any,
+) {
+  return request<API.Result_PageInfo_UserInfo__>('/api/v1/queryDetail', {
+    method: 'GEt',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    params: { ...params },
+    // ...(options || {}),
+  });
+}
+export async function queryLand(
+  params?: any,
+) {
+  return request<API.Result_PageInfo_UserInfo__>('/api/v1/queryLand', {
+    method: 'GEt',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    params: { ...params },
+    // ...(options || {}),
   });
 }
 
