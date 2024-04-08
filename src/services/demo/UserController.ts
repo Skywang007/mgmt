@@ -31,11 +31,11 @@ export async function queryLand(
   params?: any,
 ) {
   return request<API.Result_PageInfo_UserInfo__>('/api/v1/queryLand', {
-    method: 'GEt',
+    method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    params: { ...params },
+    data: { ...params },
     // ...(options || {}),
   });
 }

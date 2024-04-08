@@ -12,7 +12,7 @@ import React, { useRef, useState } from 'react';
 import CreateForm from './components/CreateForm';
 import UpdateForm, { FormValueType } from './components/UpdateForm';
 import { history } from 'umi';
-const { addUser, queryUserList, deleteUser, modifyUser } =
+const { addUser, queryUserList,queryLand, deleteUser, modifyUser } =
   services.UserController;
 
 /**
@@ -93,78 +93,36 @@ const TableList: React.FC<unknown> = () => {
 
   const columns: ProDescriptionsItemProps<API.UserInfo>[] = [
     {
-      title: 'id',
+      title: 'ID',
       dataIndex: 'nid',
       search:false
     },
     {
       title: '名称',
       dataIndex: 'title',
-      tip: '名称是唯一的 key',
-      // formItemProps: {
-      //   rules: [
-      //     {
-      //       required: true,
-      //       message: '名称为必填项',
-      //     },
-      //   ],
-      // },
     },
     {
-      title: '企业类型',
-      dataIndex: 'qylx',
-      valueType: 'text',
-      valueEnum: {
-        种植户: { text: '种植户', status: '种植户' },
-        个体工商户: { text: '个体工商户', status: '个体工商户' },
-        农民专业合作社: { text: '农民专业合作社', status: '农民专业合作社' },
-        企业: { text: '企业', status: '企业' },
-        有限责任公司: { text: '有限责任公司', status: '有限责任公司' },
-      },
+      title: '地块面积',
+      dataIndex: 'space',
+      search:false
     },
     {
-      title: '企业性质',
-      dataIndex: 'qyxz',
-      valueEnum: {
-        种植: { text: '种植', status: '种植' },
-        种植和加工: { text: '种植和加工', status: '种植和加工' },
-      },
+      title: '用地来源',
+      dataIndex: 'ydly',
     },
     {
-      title: '认证',
-      dataIndex: 'name',
-      hideInForm: true,
-      search: false,
-      valueEnum: {
-        0: { text: '是', status: 'MALE' },
-        1: { text: '否', status: 'FEMALE' },
-      },
+      title: '地块类别',
+      dataIndex: 'dklb',
     },
     {
-      title: '联系人',
-      dataIndex: 'lxr',
-      valueType: 'text',
-      search: false,
-    },
-    {
-      title: '联系电话',
-      dataIndex: 'lxphone',
+      title: '行政村',
+      dataIndex: 'admin_village',
       valueType: 'text',
     },
     {
-      title: '位置',
-      dataIndex: 'address',
+      title: '自然村',
+      dataIndex: 'nature_village',
       valueType: 'text',
-      search: false,
-      render: (data, rowdata) => {
-        return <div>{data}</div>;
-      },
-    },
-    {
-      title: '排序',
-      dataIndex: 'name',
-      valueType: 'text',
-      search: false,
     },
     {
       title: '操作',
@@ -202,7 +160,7 @@ const TableList: React.FC<unknown> = () => {
   return (
     <PageContainer
       header={{
-        title: '经营主体',
+        title: '加工厂管理',
       }}
     >
       <ProTable<API.UserInfo>
@@ -221,15 +179,13 @@ const TableList: React.FC<unknown> = () => {
             新建
           </Button>,
         ]}
-        request={async (params, sorter, filter) => {
-          console.log('request', {...params});
-          const { data, success,total } = await queryUserList({
-            ...params,
+        request={async (params) => {
+          const { data, success } = await queryLand({
+             ...params 
           });
           return {
             data: data || [],
-            success,
-            total:total
+            success: success,
           };
         }}
         columns={columns as any}

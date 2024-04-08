@@ -23,7 +23,7 @@ export default [
   },
   {
     name: '详情',
-    path: '/detail',
+    path: '/detail/:id',
     icon: 'TableOutlined',
     component: './Detail',
   },
@@ -33,10 +33,37 @@ export default [
     icon: 'SafetyOutlined',
     component: './Access',
   },{
-    name: '数据列表',
+    name: '经营主体',
     path: '/table',
     icon: 'TableOutlined',
     component: './Table',
+  },
+  {
+    name: '加工厂管理',
+    path: '/factory',
+    icon: 'TableOutlined',
+    component: './Factory',
+  },
+  {
+    name: '地块管理',
+    path: '/land',
+    icon: 'IdcardOutlined',
+    routes: [
+      { path: '/land', redirect: '/land/list' },
+      {
+        path: '/land/list',
+        component: './Land/List',
+        name: '地块列表',
+        exact: true,
+      },
+      {
+        path: '/land/detail',
+        component: './Land/Detail',
+        name: '地块详情',
+        exact: true,
+        hideInMenu: true,
+      },
+    ],
   },
   {
     path: '/reset-password',
