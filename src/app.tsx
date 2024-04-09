@@ -92,7 +92,7 @@ export const layout: RunTimeLayoutConfig = ({
 }) => {
   return {
     logo: <img src={logo} alt="parsec" />,
-    title: 'parsec-admin-next',
+    title: '化橘红产业数据分析后台管理',
     menu: {
       type: 'sub',
       collapsedShowGroupTitle: false,
@@ -138,8 +138,8 @@ export const layout: RunTimeLayoutConfig = ({
             paddingBlockStart: 12,
           }}
         >
-          <div>© 2024 Made with love</div>
-          <div>by Parsec.com.cn</div>
+          {/* <div>© 2024 Made with love</div>
+          <div>by Parsec.com.cn</div> */}
         </div>
       );
     },

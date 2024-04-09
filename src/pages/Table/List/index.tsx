@@ -93,26 +93,51 @@ const TableList: React.FC<unknown> = () => {
 
   const columns: ProDescriptionsItemProps<API.UserInfo>[] = [
     {
-      title: 'ID',
+      title: 'id',
       dataIndex: 'nid',
       search:false
     },
     {
       title: '名称',
       dataIndex: 'title',
+      tip: '名称是唯一的 key',
+      // formItemProps: {
+      //   rules: [
+      //     {
+      //       required: true,
+      //       message: '名称为必填项',
+      //     },
+      //   ],
+      // },
     },
     {
-      title: '加工厂面积',
-      dataIndex: 'space',
-      search:false
-    },
-    {
-      title: '详细地址',
-      dataIndex: 'address',
+      title: '企业类型',
+      dataIndex: 'qylx',
       valueType: 'text',
+      valueEnum: {
+        种植户: { text: '种植户', status: '种植户' },
+        个体工商户: { text: '个体工商户', status: '个体工商户' },
+        农民专业合作社: { text: '农民专业合作社', status: '农民专业合作社' },
+        企业: { text: '企业', status: '企业' },
+        有限责任公司: { text: '有限责任公司', status: '有限责任公司' },
+      },
+    },
+    {
+      title: '企业性质',
+      dataIndex: 'qyxz',
+      valueEnum: {
+        种植: { text: '种植', status: '种植' },
+        种植和加工: { text: '种植和加工', status: '种植和加工' },
+      },
+    },
+    {
+      title: '认证',
+      dataIndex: 'name',
+      hideInForm: true,
       search: false,
-      render: (data, rowdata) => {
-        return <div>{data}</div>;
+      valueEnum: {
+        0: { text: '是', status: 'MALE' },
+        1: { text: '否', status: 'FEMALE' },
       },
     },
     {
@@ -125,17 +150,21 @@ const TableList: React.FC<unknown> = () => {
       title: '联系电话',
       dataIndex: 'lxphone',
       valueType: 'text',
+    },
+    {
+      title: '位置',
+      dataIndex: 'address',
+      valueType: 'text',
       search: false,
+      render: (data, rowdata) => {
+        return <div>{data}</div>;
+      },
     },
     {
-      title: '行政村',
-      dataIndex: 'admin_village',
+      title: '排序',
+      dataIndex: 'name',
       valueType: 'text',
-    },
-    {
-      title: '自然村',
-      dataIndex: 'nature_village',
-      valueType: 'text',
+      search: false,
     },
     {
       title: '操作',
@@ -148,7 +177,7 @@ const TableList: React.FC<unknown> = () => {
               console.log('data=>', _, record);
               // handleUpdateModalVisible(true);
               // setStepFormValues(record);
-              history.push( `/detail/${record.nid}`)
+              history.push( `/table/detail/${record.nid}`)
             }}
           >
             详情
@@ -173,7 +202,7 @@ const TableList: React.FC<unknown> = () => {
   return (
     <PageContainer
       header={{
-        title: '加工厂管理',
+        title: '经营主体',
       }}
     >
       <ProTable<API.UserInfo>

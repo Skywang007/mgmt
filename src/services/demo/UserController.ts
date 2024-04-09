@@ -39,6 +39,18 @@ export async function queryLand(
     // ...(options || {}),
   });
 }
+export async function queryFactoryList(
+  params?: any,
+) {
+  return request<API.Result_PageInfo_UserInfo__>('/api/v1/queryFactoryList', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: { ...params },
+    // ...(options || {}),
+  });
+}
 
 /** 此处后端没有提供注释 POST /api/v1/user */
 export async function addUser(

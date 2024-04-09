@@ -56,7 +56,7 @@ export default defineConfig({
    * @doc https://umijs.org/docs/max/layout-menu
    */
   layout: {
-    title: 'parsec-admin-next',
+    title: '化橘红产业数据分析后台管理',
     locale: false, // 默认开启，如无需菜单国际化可关闭
   },
   theme: {

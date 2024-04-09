@@ -108,11 +108,18 @@ const TableList: React.FC<unknown> = () => {
     },
     {
       title: '用地来源',
-      dataIndex: 'ydly',
+      dataIndex:"ydly",
+      valueEnum: {
+        自有: { text: '自有', status: '自有' },
+        自有和承包: { text: '自有和承包', status: '自有和承包' },
+      },
     },
     {
       title: '地块类别',
       dataIndex: 'dklb',
+      valueEnum: {
+        山坡地: { text: '山坡地', status: '山坡地' },
+      },
     },
     {
       title: '行政村',
@@ -135,7 +142,7 @@ const TableList: React.FC<unknown> = () => {
               console.log('data=>', _, record);
               // handleUpdateModalVisible(true);
               // setStepFormValues(record);
-              history.push( `/detail/${record.nid}`)
+              history.push( `/land/detail/${record.nid}`)
             }}
           >
             详情
@@ -180,11 +187,12 @@ const TableList: React.FC<unknown> = () => {
           </Button>,
         ]}
         request={async (params) => {
-          const { data, success } = await queryLand({
+          const { data, success,total } = await queryLand({
              ...params 
           });
           return {
             data: data || [],
+            total:total,
             success: success,
           };
         }}

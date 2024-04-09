@@ -21,28 +21,71 @@ export default [
     icon: 'HomeOutlined',
     component: './Home',
   },
-  {
-    name: '详情',
-    path: '/detail/:id',
-    icon: 'TableOutlined',
-    component: './Detail',
-  },
+  // {
+  //   name: '详情',
+  //   path: '/detail/:id',
+  //   icon: 'TableOutlined',
+  //   component: './Detail',
+  // },
   {
     name: '权限',
     path: '/access',
     icon: 'SafetyOutlined',
     component: './Access',
-  },{
-    name: '经营主体',
+  },
+  // {
+  //   name: '经营主体',
+  //   path: '/table',
+  //   icon: 'TableOutlined',
+  //   component: './Table',
+  // },
+  // {
+  //   name: '加工厂管理',
+  //   path: '/factory',
+  //   icon: 'TableOutlined',
+  //   component: './Factory',
+  // },
+  {
+    name: '经营主体管理',
     path: '/table',
-    icon: 'TableOutlined',
-    component: './Table',
+    icon: 'IdcardOutlined',
+    routes: [
+      { path: '/table', redirect: '/table/list' },
+      {
+        path: '/table/list',
+        component: './Table/List',
+        name: '经营主体列表',
+        exact: true,
+      },
+      {
+        path: '/table/detail/:id',
+        component: './Table/Detail',
+        name: '经营主体详情',
+        exact: true,
+        hideInMenu: true,
+      },
+    ],
   },
   {
     name: '加工厂管理',
     path: '/factory',
-    icon: 'TableOutlined',
-    component: './Factory',
+    icon: 'IdcardOutlined',
+    routes: [
+      { path: '/factory', redirect: '/factory/list' },
+      {
+        path: '/factory/list',
+        component: './Factory/List',
+        name: '加工厂列表',
+        exact: true,
+      },
+      {
+        path: '/factory/detail/:id',
+        component: './Factory/Detail',
+        name: '加工厂详情',
+        exact: true,
+        hideInMenu: true,
+      },
+    ],
   },
   {
     name: '地块管理',
@@ -57,7 +100,7 @@ export default [
         exact: true,
       },
       {
-        path: '/land/detail',
+        path: '/land/detail/:id',
         component: './Land/Detail',
         name: '地块详情',
         exact: true,

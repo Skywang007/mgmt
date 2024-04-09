@@ -29,7 +29,7 @@ declare namespace API {
   interface Result_PageInfo_UserInfo__ {
     success?: boolean;
     errorMessage?: string;
-    data?: PageInfo_UserInfo_;
+    data?: any;
     total?: number;
   }
 
@@ -55,6 +55,7 @@ declare namespace API {
     /** email */
     email?: string;
     gender?: UserGenderEnum;
+    nid?: string;
   }
 
   interface UserInfoVO {
