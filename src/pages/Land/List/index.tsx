@@ -95,7 +95,8 @@ const TableList: React.FC<unknown> = () => {
     {
       title: 'ID',
       dataIndex: 'nid',
-      search:false
+      search: false,
+      key: 'nid',
     },
     {
       title: '名称',
