@@ -1,22 +1,25 @@
 import {
   FooterToolbar,
   ProForm,
+  ProFormDatePicker,
   ProFormInstance,
+  ProFormSelect,
   ProFormText,
 } from '@ant-design/pro-components';
 import { Button, Layout, message } from 'antd';
+import dayjs from 'dayjs';
 import { useRef, useState } from 'react';
 const { Header, Footer, Sider, Content } = Layout;
 
 import services from '@/services/demo';
-import { useParams } from 'umi';
+import { useParams,history } from 'umi';
 const {
   addUser,
   queryUserList,
   queryDetail,
   queryLand,
   deleteUser,
-  modifyUser,
+  updateLand,
 } = services.UserController;
 
 export default () => {
@@ -31,12 +34,32 @@ export default () => {
   >();
 
   const handleSubimt = async () => {
-    console.log('formRef', formRef);
-    const val1 = await formRef.current?.validateFields();
-    console.log('validateFields:', val1);
-    const val2 = await formRef.current?.validateFieldsReturnFormatValue?.();
-    console.log('validateFieldsReturnFormatValue:', val2);
-    setReadOnly(true);
+    try {
+      const val2 = await formRef.current?.validateFieldsReturnFormatValue?.();
+      console.log('validateFieldsReturnFormatValue:', val2);
+      let { cbrq, flowrq } = val2;
+      // 假设 cbrq 和 flowrq 是从某个地方获取的 dayjs 对象
+      cbrq = dayjs(cbrq);
+      flowrq = dayjs(flowrq);
+      cbrq = cbrq.format('YYYY-MM-DD');
+      flowrq = flowrq.format('YYYY-MM-DD');
+      const id = parseInt(URlparams.id, 10) || 1;
+      const params = {
+        id,
+        ...val2,
+        cbrq,
+        flowrq,
+      };
+      const { state } = await updateLand(params);
+      if (state === 200) {
+        setReadOnly(true);
+        message.success('修改成功');
+      } else {
+        message.error('修改失败');
+      }
+    } catch (error) {
+      message.error('修改失败');
+    }
   };
   return (
     <>
@@ -53,6 +76,9 @@ export default () => {
         submitter={{
           render: (_, dom) => (
             <FooterToolbar>
+              <Button type="primary" onClick={() => history.push( `/land/list`)}>
+                返回
+              </Button>
               {readOnly ? (
                 <Button type="primary" onClick={() => setReadOnly(false)}>
                   编辑
@@ -62,9 +88,11 @@ export default () => {
                   取消
                 </Button>
               )}
-              {!readOnly && <Button type="primary" onClick={() => handleSubimt()}>
-                提交
-              </Button>}
+              {!readOnly && (
+                <Button type="primary" onClick={() => handleSubimt()}>
+                  提交
+                </Button>
+              )}
             </FooterToolbar>
           ),
         }}
@@ -91,16 +119,30 @@ export default () => {
         // autoFocusFirstInput
       >
         <ProFormText
-          colProps={{ md: 12, xl: 10 }}
           name="title"
           label="名称"
           placeholder="请输入名称"
+          width={'md'}
           rules={[{ required: true, message: '请输入名称' }]}
         />
-        <ProFormText
+        <ProFormSelect
           colProps={{ md: 12, xl: 10 }}
-          name="dklb"
+          label="用地来源"
+          name="ydly"
+          valueEnum={{
+            自有: '自有',
+            自有和承包: '自有和承包',
+          }}
+        />
+        <ProFormSelect
+          colProps={{ md: 12, xl: 10 }}
           label="地块类别"
+          name="dklb"
+          valueEnum={{
+            山坡地: '山坡地',
+            平地: '平地',
+            草原地: '草原地',
+          }}
         />
         <ProFormText
           colProps={{ md: 12, xl: 10 }}
@@ -147,7 +189,7 @@ export default () => {
           name="cbspace"
           label="承包面积（亩）"
         />
-        <ProFormText
+        <ProFormDatePicker
           colProps={{ md: 12, xl: 10 }}
           name="cbrq"
           label="承包日期"
@@ -162,14 +204,14 @@ export default () => {
           name="flowspace"
           label="流转面积（亩）"
         />
-        <ProFormText
+        <ProFormDatePicker
           colProps={{ md: 12, xl: 10 }}
           name="flowrq"
           label="流转日期"
         />
         <ProFormText
           colProps={{ md: 12, xl: 10 }}
-          name="flows"
+          name="flowns"
           label="流转年数"
         />
         <ProFormText

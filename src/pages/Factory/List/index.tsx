@@ -147,7 +147,7 @@ const TableList: React.FC<unknown> = () => {
               console.log('data=>', _, record);
               // handleUpdateModalVisible(true);
               // setStepFormValues(record);
-              history.push( `/detail/${record.nid}`)
+              history.push( `/factory/detail/${record.nid}`)
             }}
           >
             详情

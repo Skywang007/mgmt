@@ -16,7 +16,266 @@ import {
 import { TreeSelect, message } from 'antd';
 import moment from 'dayjs';
 import { useRef } from 'react';
+const columns = [
+  {
+    title: '名称',
+    key: 'text',
+    dataIndex: 'title',
+  },
+  {
+    title: '年份',
+    key: 'text',
+    dataIndex: 'year',
+  },
+  {
+    title: '种植品种',
+    key: 'text',
+    dataIndex: 'plant_type',
+  },
+  {
+    title: '种植面积',
+    key: 'text',
+    dataIndex: 'area',
+  },
+  {
+    title: '所属镇',
+    key: 'text',
+    dataIndex: 'county',
+  },
+  {
+    title: '行政村（村委）',
+    key: 'text',
+    dataIndex: 'admin_village',
+  },
+  {
+    title: '自然村',
+    key: 'text',
+    dataIndex: 'nature_village',
+  },
+  {
+    title: '详细地址',
+    key: 'text',
+    dataIndex: 'address',
+  },
+  {
+    title: '树龄（年）',
+    key: 'number',
+    dataIndex: 'tree',
+  },
+  {
+    title: '种苗价格（元/株）',
+    key: 'money',
+    valueType: 'money',
+    fieldProps: {
+      moneySymbol: '￥',
+    },
+    dataIndex: 'plant_price',
+  },
+  {
+    title: '仓储面积（平方米）',
+    key: 'text',
+    dataIndex: 'storage_area',
+  },
+  {
+    title: '鲜果年总产量（吨）',
+    key: 'number',
+    dataIndex: 'fruit_input',
+  },
+  {
+    title: '收购价（元/公斤）',
+    key: 'money',
+    valueType: 'money',
+    fieldProps: {
+      moneySymbol: '￥',
+    },
+    dataIndex: 'buy',
+  },
+  {
+    title: '鲜果年销售额（万元）',
+    key: 'money',
+    valueType: 'money',
+    fieldProps: {
+      moneySymbol: '￥',
+    },
+    dataIndex: 'fruit_sale',
+  },
+  {
+    title: '干果年总产量（吨）',
+    key: 'text',
+    dataIndex: 'dryfruit_input',
+  },
+  {
+    title: '销售价（元/公斤）',
+    key: 'text',
+    valueType: 'money',
+    fieldProps: {
+      moneySymbol: '￥',
+    },
+    dataIndex: 'sale',
+  },
+  {
+    title: '干果年销售额（万元）',
+    key: 'text',
+    valueType: 'money',
+    fieldProps: {
+      moneySymbol: '￥',
+    },
+    dataIndex: 'dryfruit_sale',
+  },
+  {
+    title: '干果年入库量（吨）',
+    key: 'text',
+    dataIndex: 'dryfruit_put',
+  },
+  {
+    title: '干果年销售量（吨）',
+    key: 'text',
+    dataIndex: 'dryfruit_volume',
+  },
+  {
+    title: '干果年库存量（吨）',
+    key: 'text',
+    dataIndex: 'dryfruit_storage',
+  },
+  {
+    title: '初加工率%',
+    key: 'text',
+    dataIndex: 'begin_process',
+  },
+  {
+    title: '深加工率',
+    key: 'text',
+    dataIndex: 'deep_process',
+  },
+  {
+    title: '土地租赁费（元/亩）',
+    key: 'text',
+    valueType: 'money',
+    fieldProps: {
+      moneySymbol: '￥',
+    },
+    dataIndex: 'land_rent',
+  },
+  {
+    title: '机械作业费（元/年）',
+    key: 'text',
+    valueType: 'money',
+    fieldProps: {
+      moneySymbol: '￥',
+    },
+    dataIndex: 'engine_work',
+  },
+  {
+    title: '种苗购买（元/年）',
+    key: 'text',
+    valueType: 'money',
+    fieldProps: {
+      moneySymbol: '￥',
+    },
+    dataIndex: 'plant_cost',
+  },
+  {
+    title: '化肥（元/年）',
+    key: 'text',
+    valueType: 'money',
+    fieldProps: {
+      moneySymbol: '￥',
+    },
+    dataIndex: 'fertilizer',
+  },
+  {
+    title: '农药费（元/年）',
+    key: 'text',
+    valueType: 'money',
+    fieldProps: {
+      moneySymbol: '￥',
+    },
+    dataIndex: 'pesticide',
+  },
+  {
+    title: '抽水灌溉（元/年）',
+    key: 'text',
+    valueType: 'money',
+    fieldProps: {
+      moneySymbol: '￥',
+    },
+    dataIndex: 'water',
+  },
+  {
+    title: '雇工人数（人/年）',
+    key: 'text',
+    valueType: 'money',
+    fieldProps: {
+      moneySymbol: '￥',
+    },
+    dataIndex: 'employee_number',
+  },
+  {
+    title: '雇工费用（元/年）',
+    key: 'text',
+    valueType: 'money',
+    fieldProps: {
+      moneySymbol: '￥',
+    },
+    dataIndex: 'employee_sale',
+  },
+  {
+    title: '批发市场',
+    key: 'text',
+    dataIndex: 'wholesale',
+  },
+  {
+    title: '商贩',
+    key: 'text',
+    dataIndex: 'peddler',
+  },
+  {
+    title: '加工企业',
+    key: 'text',
+    dataIndex: 'process',
+  },
+  {
+    title: '网络电商',
+    key: 'text',
+    dataIndex: 'internet',
+  },
+  {
+    title: '其他',
+    key: 'text',
+    dataIndex: 'other',
+  },
+  {
+    title: '批发市场地点',
+    key: 'text',
+    dataIndex: 'wholesale_place',
+  },
+  {
+    title: '商贩地点',
+    key: 'text',
+    dataIndex: 'peddler_place',
+  },
+  {
+    title: '加工企业名称',
+    key: 'text',
+    dataIndex: 'process_name',
+  },
 
+  // {
+  //   title: '操作',
+  //   valueType: 'option',
+  //   render: () => [
+  //     <a target="_blank" rel="noopener noreferrer" key="link">
+  //       链路
+  //     </a>,
+  //     <a target="_blank" rel="noopener noreferrer" key="warning">
+  //       报警
+  //     </a>,
+  //     <a target="_blank" rel="noopener noreferrer" key="view">
+  //       查看
+  //     </a>,
+  //   ],
+  // },
+];
 const waitTime = (time: number = 100) => {
   return new Promise((resolve) => {
     setTimeout(() => {

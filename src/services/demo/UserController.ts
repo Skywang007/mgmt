@@ -19,11 +19,11 @@ export async function queryDetail(
   params?: any,
 ) {
   return request<API.Result_PageInfo_UserInfo__>('/api/v1/queryDetail', {
-    method: 'GEt',
+    method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    params: { ...params },
+    data: { ...params },
     // ...(options || {}),
   });
 }
@@ -43,6 +43,42 @@ export async function queryFactoryList(
   params?: any,
 ) {
   return request<API.Result_PageInfo_UserInfo__>('/api/v1/queryFactoryList', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: { ...params },
+    // ...(options || {}),
+  });
+}
+export async function updateLand(
+  params?: any,
+) {
+  return request<API.Result_PageInfo_UserInfo__>('/api/v1/updateLand', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: { ...params },
+    // ...(options || {}),
+  });
+}
+export async function updateFactory(
+  params?: any,
+) {
+  return request<API.Result_PageInfo_UserInfo__>('/api/v1/updateFactory', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: { ...params },
+    // ...(options || {}),
+  });
+}
+export async function updateCirculate(
+  params?: any,
+) {
+  return request<API.Result_PageInfo_UserInfo__>('/api/v1/updateCirculate', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

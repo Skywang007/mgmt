@@ -101,14 +101,17 @@ const TableList: React.FC<unknown> = () => {
     {
       title: '名称',
       dataIndex: 'title',
+      key: 'title',
     },
     {
       title: '地块面积',
       dataIndex: 'space',
-      search:false
+      search: false,
+      key: 'space',
     },
     {
       title: '用地来源',
+      key:'ydly',
       dataIndex:"ydly",
       valueEnum: {
         自有: { text: '自有', status: '自有' },
@@ -118,6 +121,7 @@ const TableList: React.FC<unknown> = () => {
     {
       title: '地块类别',
       dataIndex: 'dklb',
+      key: 'dklb',
       valueEnum: {
         山坡地: { text: '山坡地', status: '山坡地' },
       },
@@ -126,16 +130,19 @@ const TableList: React.FC<unknown> = () => {
       title: '行政村',
       dataIndex: 'admin_village',
       valueType: 'text',
+      key: 'admin_village',
     },
     {
       title: '自然村',
       dataIndex: 'nature_village',
       valueType: 'text',
+      key: 'nature_village',
     },
     {
       title: '操作',
       dataIndex: 'option',
       valueType: 'option',
+      key: 'option',
       render: (_, record) => (
         <>
           <a

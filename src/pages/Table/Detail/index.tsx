@@ -1,493 +1,57 @@
-import { ProDescriptions } from '@ant-design/pro-components';
-import type { TabsProps } from 'antd';
-import { Button, Flex, Layout, Tabs } from 'antd';
+import {
+  FooterToolbar,
+  ProDescriptions,
+  ProForm,
+  ProFormInstance,
+  ProFormSelect,
+  ProFormText,
+} from '@ant-design/pro-components';
+import { Button, Flex, Layout, message } from 'antd';
 const { Header, Footer, Sider, Content } = Layout;
 
 import services from '@/services/demo';
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'umi';
-const {
-  addUser,
-  queryUserList,
-  queryDetail,
-  queryLand,
-  deleteUser,
-  modifyUser,
-} = services.UserController;
+const { updateCirculate, queryUserList, queryDetail, deleteUser, modifyUser } =
+  services.UserController;
 
 export default () => {
-  const URlparams = useParams()
+  const URlparams = useParams();
   useEffect(() => {
-    console.log('location=>','---',URlparams);
+    console.log('location=>', '---', URlparams);
   }, []);
-  
-  const columns = [
-    {
-      title: '名称',
-      key: 'text',
-      dataIndex: 'title',
-    },
-    {
-      title: '年份',
-      key: 'text',
-      dataIndex: 'year',
-    },
-    {
-      title: '种植品种',
-      key: 'text',
-      dataIndex: 'plant_type',
-    },
-    {
-      title: '种植面积',
-      key: 'text',
-      dataIndex: 'area',
-    },
-    {
-      title: '所属镇',
-      key: 'text',
-      dataIndex: 'county',
-    },
-    {
-      title: '行政村（村委）',
-      key: 'text',
-      dataIndex: 'admin_village',
-    },
-    {
-      title: '自然村',
-      key: 'text',
-      dataIndex: 'nature_village',
-    },
-    {
-      title: '详细地址',
-      key: 'text',
-      dataIndex: 'address',
-    },
-    {
-      title: '树龄（年）',
-      key: 'number',
-      dataIndex: 'tree',
-    },
-    {
-      title: '种苗价格（元/株）',
-      key: 'money',
-      valueType: 'money',
-      fieldProps: {
-        moneySymbol: '￥',
-      },
-      dataIndex: 'plant_price',
-    },
-    {
-      title: '仓储面积（平方米）',
-      key: 'text',
-      dataIndex: 'storage_area',
-    },
-    {
-      title: '鲜果年总产量（吨）',
-      key: 'number',
-      dataIndex: 'fruit_input',
-    },
-    {
-      title: '收购价（元/公斤）',
-      key: 'money',
-      valueType: 'money',
-      fieldProps: {
-        moneySymbol: '￥',
-      },
-      dataIndex: 'buy',
-    },
-    {
-      title: '鲜果年销售额（万元）',
-      key: 'money',
-      valueType: 'money',
-      fieldProps: {
-        moneySymbol: '￥',
-      },
-      dataIndex: 'fruit_sale',
-    },
-    {
-      title: '干果年总产量（吨）',
-      key: 'text',
-      dataIndex: 'dryfruit_input',
-    },
-    {
-      title: '销售价（元/公斤）',
-      key: 'text',
-      valueType: 'money',
-      fieldProps: {
-        moneySymbol: '￥',
-      },
-      dataIndex: 'sale',
-    },
-    {
-      title: '干果年销售额（万元）',
-      key: 'text',
-      valueType: 'money',
-      fieldProps: {
-        moneySymbol: '￥',
-      },
-      dataIndex: 'dryfruit_sale',
-    },
-    {
-      title: '干果年入库量（吨）',
-      key: 'text',
-      dataIndex: 'dryfruit_put',
-    },
-    {
-      title: '干果年销售量（吨）',
-      key: 'text',
-      dataIndex: 'dryfruit_volume',
-    },
-    {
-      title: '干果年库存量（吨）',
-      key: 'text',
-      dataIndex: 'dryfruit_storage',
-    },
-    {
-      title: '初加工率%',
-      key: 'text',
-      dataIndex: 'begin_process',
-    },
-    {
-      title: '深加工率',
-      key: 'text',
-      dataIndex: 'deep_process',
-    },
-    {
-      title: '土地租赁费（元/亩）',
-      key: 'text',
-      valueType: 'money',
-      fieldProps: {
-        moneySymbol: '￥',
-      },
-      dataIndex: 'land_rent',
-    },
-    {
-      title: '机械作业费（元/年）',
-      key: 'text',
-      valueType: 'money',
-      fieldProps: {
-        moneySymbol: '￥',
-      },
-      dataIndex: 'engine_work',
-    },
-    {
-      title: '种苗购买（元/年）',
-      key: 'text',
-      valueType: 'money',
-      fieldProps: {
-        moneySymbol: '￥',
-      },
-      dataIndex: 'plant_cost',
-    },
-    {
-      title: '化肥（元/年）',
-      key: 'text',
-      valueType: 'money',
-      fieldProps: {
-        moneySymbol: '￥',
-      },
-      dataIndex: 'fertilizer',
-    },
-    {
-      title: '农药费（元/年）',
-      key: 'text',
-      valueType: 'money',
-      fieldProps: {
-        moneySymbol: '￥',
-      },
-      dataIndex: 'pesticide',
-    },
-    {
-      title: '抽水灌溉（元/年）',
-      key: 'text',
-      valueType: 'money',
-      fieldProps: {
-        moneySymbol: '￥',
-      },
-      dataIndex: 'water',
-    },
-    {
-      title: '雇工人数（人/年）',
-      key: 'text',
-      valueType: 'money',
-      fieldProps: {
-        moneySymbol: '￥',
-      },
-      dataIndex: 'employee_number',
-    },
-    {
-      title: '雇工费用（元/年）',
-      key: 'text',
-      valueType: 'money',
-      fieldProps: {
-        moneySymbol: '￥',
-      },
-      dataIndex: 'employee_sale',
-    },
-    {
-      title: '批发市场',
-      key: 'text',
-      dataIndex: 'wholesale',
-    },
-    {
-      title: '商贩',
-      key: 'text',
-      dataIndex: 'peddler',
-    },
-    {
-      title: '加工企业',
-      key: 'text',
-      dataIndex: 'process',
-    },
-    {
-      title: '网络电商',
-      key: 'text',
-      dataIndex: 'internet',
-    },
-    {
-      title: '其他',
-      key: 'text',
-      dataIndex: 'other',
-    },
-    {
-      title: '批发市场地点',
-      key: 'text',
-      dataIndex: 'wholesale_place',
-    },
-    {
-      title: '商贩地点',
-      key: 'text',
-      dataIndex: 'peddler_place',
-    },
-    {
-      title: '加工企业名称',
-      key: 'text',
-      dataIndex: 'process_name',
-    },
+  const formRef = useRef<
+    ProFormInstance<{
+      name: string;
+      company?: string;
+      useMode?: string;
+    }>
+  >();
+  const [readOnly, setReadOnly] = useState(true);
 
-    // {
-    //   title: '操作',
-    //   valueType: 'option',
-    //   render: () => [
-    //     <a target="_blank" rel="noopener noreferrer" key="link">
-    //       链路
-    //     </a>,
-    //     <a target="_blank" rel="noopener noreferrer" key="warning">
-    //       报警
-    //     </a>,
-    //     <a target="_blank" rel="noopener noreferrer" key="view">
-    //       查看
-    //     </a>,
-    //   ],
-    // },
-  ];
-  const landColumns = [
-    {
-      title: '地块类别',
-      key: 'text',
-      dataIndex: 'dklb',
-    },
-    {
-      title: '地块经度',
-      key: 'text',
-      dataIndex: 'lat',
-    },
-    {
-      title: '地块纬度',
-      key: 'text',
-      dataIndex: 'lng',
-    },
-    {
-      title: '所属镇',
-      key: 'text',
-      dataIndex: 'county',
-    },
-    {
-      title: '行政村（村委）',
-      key: 'text',
-      dataIndex: 'admin_village',
-    },
-    {
-      title: '自然村',
-      key: 'text',
-      dataIndex: 'nature_village',
-    },
-    {
-      title: '详细地址',
-      key: 'text',
-      dataIndex: 'address',
-    },
-    {
-      title: '地块面积（亩）',
-      key: 'text',
-      dataIndex: 'space',
-    },
-    {
-      title: '自有面积（亩）',
-      key: 'text',
-      dataIndex: 'zyspace',
-    },
-    {
-      title: '承包面积（亩）',
-      key: 'text',
-      dataIndex: 'cbspace',
-    },
-    {
-      title: '承包日期',
-      key: 'text',
-      dataIndex: 'cbrq',
-    },
-    {
-      title: '承包年数',
-      key: 'text',
-      dataIndex: 'cbns',
-    },
-    {
-      title: '流转面积（亩）',
-      key: 'text',
-      dataIndex: 'flowspace',
-    },
-    {
-      title: '流转日期',
-      key: 'text',
-      dataIndex: 'flowrq',
-    },
-    {
-      title: '流转年数',
-      key: 'text',
-      dataIndex: 'flows',
-    },
-    {
-      title: '种植品种',
-      key: 'text',
-      dataIndex: 'breed',
-    },
-    {
-      title: '种植面积（亩）',
-      key: 'text',
-      dataIndex: 'space',
-    },
-    {
-      title: '种植株数（株）',
-      key: 'text',
-      dataIndex: 'zzzs',
-    },
-    {
-      title: '种苗来源',
-      key: 'text',
-      dataIndex: 'zmly',
-    },
-    {
-      title: '种苗属性',
-      key: 'text',
-      dataIndex: 'zmsx',
-    },
-    {
-      title: '圈枝苗株数',
-      key: 'text',
-      dataIndex: 'qzmzs',
-    },
-    {
-      title: '定植时间',
-      key: 'text',
-      dataIndex: 'dzsj',
-    },
-    {
-      title: '树龄',
-      key: 'text',
-      dataIndex: 'sl',
-    },
-    {
-      title: '种苗价格',
-      key: 'text',
-      dataIndex: 'zmjg',
-    },
-    {
-      title: '产量2021（吨）',
-      key: 'text',
-      dataIndex: 'dkcl1',
-    },
-    {
-      title: '产量2022（吨）',
-      key: 'text',
-      dataIndex: 'dkcl2',
-    },
-    {
-      title: '产量2023（吨）',
-      key: 'text',
-      dataIndex: 'dkcl3',
-    },
-    {
-      title: '所属地点',
-      key: 'text',
-      dataIndex: 'address',
-    },
-    {
-      title: '详细地址',
-      key: 'text',
-      dataIndex: 'address',
-    },
-    {
-      title: '备注',
-      key: 'text',
-      dataIndex: 'description',
-    },
-  ];
-  const items: TabsProps['items'] = [
-    {
-      key: '1',
-      label: '经营情况',
-      children: (
-        <ProDescriptions
-          column={2}
-          title="化州市家庭农场"
-          // tooltip="包含了从服务器请求，columns等功能"
-          request={async () => {
-            const { data, success } = await queryDetail({
-              id: URlparams.id,
-            });
-            return {
-              data: data[0] || {},
-              success: success,
-            };
-          }}
-          columns={columns}
-        >
-          <ProDescriptions.Item valueType="option">
-            <Button key="primary" type="primary" style={{ margin: '0 10px' }}>
-              提交
-            </Button>
-          </ProDescriptions.Item>
-          <ProDescriptions.Item valueType="option">
-            <Button key="primary" type="primary">
-              删除
-            </Button>
-          </ProDescriptions.Item>
-        </ProDescriptions>
-      ),
-    },
-    {
-      key: '2',
-      label: '地块信息',
-      children: (
-        <ProDescriptions
-          column={2}
-          title="化州市家庭农场"
-          // tooltip="包含了从服务器请求，columns等功能"
-          request={async () => {
-            const { data, success } = await queryLand({
-              id: URlparams.id,
-            });
-            return {
-              data: data[0] || {},
-              success: success,
-            };
-          }}
-          columns={landColumns}
-        />
-      ),
-    },
-  ];
+  
+
+  const handleSubimt = async () => {
+    try {
+      const val2 = await formRef.current?.validateFieldsReturnFormatValue?.();
+      console.log('validateFieldsReturnFormatValue:', val2);
+      const id = parseInt(URlparams.id, 10) || 1;
+      const params = {
+        id,
+        ...val2,
+      };
+      const { state } = await updateCirculate(params);
+      if (state === 200) {
+        setReadOnly(true);
+        message.success('修改成功');
+      } else {
+        message.error('修改失败');
+      }
+    } catch (error) {
+      message.error('修改失败');
+    }
+  };
+
   const layoutStyle = {
     borderRadius: 8,
     overflow: 'hidden',
@@ -502,6 +66,8 @@ export default () => {
     backgroundColor: 'lightblue',
     margin: '0 30px 0 0',
   };
+
+
   return (
     <Flex gap="middle" wrap="wrap">
       <Layout style={layoutStyle}>
@@ -590,7 +156,262 @@ export default () => {
         </Sider>
         <Layout>
           <Content>
-            <Tabs defaultActiveKey="1" items={items} />
+            <ProForm<{
+              name: string;
+              company?: string;
+              useMode?: string;
+            }>
+              layout="horizontal"
+              grid={true}
+              rowProps={{
+                gutter: [100, 0],
+              }}
+              submitter={{
+                render: (_, dom) => (
+                  <FooterToolbar>
+                    <Button
+                      type="primary"
+                      onClick={() => history.push(`/table/list`)}
+                    >
+                      返回
+                    </Button>
+                    {readOnly ? (
+                      <Button type="primary" onClick={() => setReadOnly(false)}>
+                        编辑
+                      </Button>
+                    ) : (
+                      <Button type="primary" onClick={() => setReadOnly(true)}>
+                        取消
+                      </Button>
+                    )}
+                    {!readOnly && (
+                      <Button type="primary" onClick={() => handleSubimt()}>
+                        提交
+                      </Button>
+                    )}
+                  </FooterToolbar>
+                ),
+              }}
+              onFinish={async (values) => {
+                console.log(values);
+                const val1 = await formRef.current?.validateFields();
+                console.log('validateFields:', val1);
+                const val2 =
+                  await formRef.current?.validateFieldsReturnFormatValue?.();
+                console.log('validateFieldsReturnFormatValue:', val2);
+                message.success('提交成功');
+              }}
+              formRef={formRef}
+              params={{ id: '100' }}
+              formKey="base-form-use-demo"
+              readonly={readOnly}
+              request={async () => {
+                const { data, success } = await queryDetail({
+                  nid: URlparams.id,
+                });
+                return data[0] || {};
+              }}
+
+              // autoFocusFirstInput
+            >
+              <ProFormText
+                name="title"
+                label="名称"
+                placeholder="请输入名称"
+                width={'md'}
+                rules={[{ required: true, message: '请输入名称' }]}
+              />
+              <ProFormText
+                colProps={{ md: 12, xl: 10 }}
+                label="年份"
+                name="year"
+              />
+              <ProFormText
+                colProps={{ md: 12, xl: 10 }}
+                name="plant_type"
+                label="种植品种"
+              />
+              <ProFormText
+                colProps={{ md: 12, xl: 10 }}
+                name="area"
+                label="种植面积"
+              />
+              <ProFormText
+                colProps={{ md: 12, xl: 10 }}
+                name="county"
+                label="所属镇"
+              />
+              <ProFormText
+                colProps={{ md: 12, xl: 10 }}
+                name="admin_village"
+                label="行政村（村委）"
+              />
+              <ProFormText
+                colProps={{ md: 12, xl: 10 }}
+                name="nature_village"
+                label="自然村"
+              />
+              <ProFormText
+                colProps={{ md: 12, xl: 10 }}
+                name="address"
+                label="详细地址"
+              />
+              <ProFormText
+                colProps={{ md: 12, xl: 10 }}
+                name="tree"
+                label="树龄（年）"
+              />
+              <ProFormText
+                colProps={{ md: 12, xl: 10 }}
+                name="plant_price"
+                label="种苗价格（元/株）"
+              />
+              <ProFormText
+                colProps={{ md: 12, xl: 10 }}
+                name="storage_area"
+                label="仓储面积（平方米）"
+              />
+              <ProFormText
+                colProps={{ md: 12, xl: 10 }}
+                name="fruit_input"
+                label="鲜果年总产量（吨）"
+              />
+              <ProFormText
+                colProps={{ md: 12, xl: 10 }}
+                name="buy"
+                label="收购价（元/公斤）"
+              />
+              <ProFormText
+                colProps={{ md: 12, xl: 10 }}
+                name="fruit_sale"
+                label="鲜果年销售额（万元）"
+              />
+              <ProFormText
+                colProps={{ md: 12, xl: 10 }}
+                name="dryfruit_input"
+                label="干果年总产量（吨）"
+              />
+              <ProFormText
+                colProps={{ md: 12, xl: 10 }}
+                name="sale"
+                label="销售价（元/公斤）"
+              />
+              <ProFormText
+                colProps={{ md: 12, xl: 10 }}
+                name="dryfruit_sale"
+                label="干果年销售额（万元）"
+              />
+              <ProFormText
+                colProps={{ md: 12, xl: 10 }}
+                name="dryfruit_put"
+                label="干果年入库量（吨）"
+              />
+              <ProFormText
+                colProps={{ md: 12, xl: 10 }}
+                name="dryfruit_volume"
+                label="干果年销售量（吨）"
+              />
+              <ProFormText
+                colProps={{ md: 12, xl: 10 }}
+                name="dryfruit_storage"
+                label="干果年库存量（吨）"
+              />
+              <ProFormText
+                colProps={{ md: 12, xl: 10 }}
+                name="begin_process"
+                label="初加工率%"
+              />
+              <ProFormText
+                colProps={{ md: 12, xl: 10 }}
+                name="deep_process"
+                label="深加工率"
+              />
+              <ProFormText
+                colProps={{ md: 12, xl: 10 }}
+                name="land_rent"
+                label="土地租赁费（元/亩）"
+              />
+              <ProFormText
+                colProps={{ md: 12, xl: 10 }}
+                name="engine_work"
+                label="机械作业费（元/年）"
+              />
+              <ProFormText
+                colProps={{ md: 12, xl: 10 }}
+                name="plant_cost"
+                label="种苗购买（元/年）"
+              />
+              <ProFormText
+                colProps={{ md: 12, xl: 10 }}
+                name="fertilizer"
+                label="化肥（元/年）"
+              />
+              <ProFormText
+                colProps={{ md: 12, xl: 10 }}
+                name="pesticide"
+                label="农药费（元/年）"
+              />
+              <ProFormText
+                colProps={{ md: 12, xl: 10 }}
+                name="water"
+                label="抽水灌溉（元/年）"
+              />
+              <ProFormText
+                colProps={{ md: 12, xl: 10 }}
+                name="employee_number"
+                label="雇工人数（人/年）"
+              />
+              <ProFormText
+                colProps={{ md: 12, xl: 10 }}
+                name="employee_sale"
+                label="雇工费用（元/年）"
+              />
+              <ProFormText
+                colProps={{ md: 12, xl: 10 }}
+                name="deep_process"
+                label="批发市场"
+              />
+              <ProFormText
+                colProps={{ md: 12, xl: 10 }}
+                name="wholesale"
+                label="深加工率"
+              />
+              <ProFormText
+                colProps={{ md: 12, xl: 10 }}
+                name="peddler"
+                label="商贩"
+              />
+              <ProFormText
+                colProps={{ md: 12, xl: 10 }}
+                name="process"
+                label="加工企业"
+              />
+              <ProFormText
+                colProps={{ md: 12, xl: 10 }}
+                name="internet"
+                label="网络电商"
+              />
+              <ProFormText
+                colProps={{ md: 12, xl: 10 }}
+                name="other"
+                label="其他"
+              />
+              <ProFormText
+                colProps={{ md: 12, xl: 10 }}
+                name="wholesale_place"
+                label="批发市场地点"
+              />
+              <ProFormText
+                colProps={{ md: 12, xl: 10 }}
+                name="peddler_place"
+                label="商贩地点"
+              />
+              <ProFormText
+                colProps={{ md: 12, xl: 10 }}
+                name="process_name"
+                label="加工企业名称"
+              />
+            </ProForm>
           </Content>
         </Layout>
       </Layout>
