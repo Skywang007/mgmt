@@ -88,6 +88,20 @@ export async function updateCirculate(
   });
 }
 
+//认证经营主体
+export async function authentication(
+  params?: any,
+) {
+  return request<API.Result_PageInfo_UserInfo__>('/api/v1/authentication', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: { ...params },
+    // ...(options || {}),
+  });
+}
+
 /** 此处后端没有提供注释 POST /api/v1/user */
 export async function addUser(
   body?: API.UserInfoVO,

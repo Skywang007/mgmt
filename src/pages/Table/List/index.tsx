@@ -132,12 +132,12 @@ const TableList: React.FC<unknown> = () => {
     },
     {
       title: '认证',
-      dataIndex: 'name',
+      dataIndex: 'status',
       hideInForm: true,
       search: false,
       valueEnum: {
-        0: { text: '是', status: 'MALE' },
-        1: { text: '否', status: 'FEMALE' },
+        0: { text: '否', status: '0' },
+        1: { text: '是', status: '1' },
       },
     },
     {
@@ -162,7 +162,7 @@ const TableList: React.FC<unknown> = () => {
     },
     {
       title: '排序',
-      dataIndex: 'name',
+      dataIndex: 'oid',
       valueType: 'text',
       search: false,
     },

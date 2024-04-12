@@ -3,23 +3,46 @@ import {
   ProDescriptions,
   ProForm,
   ProFormInstance,
-  ProFormSelect,
   ProFormText,
 } from '@ant-design/pro-components';
-import { Button, Flex, Layout, message } from 'antd';
+import { Button, Flex, Layout, Modal, message } from 'antd';
 const { Header, Footer, Sider, Content } = Layout;
 
 import services from '@/services/demo';
 import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'umi';
-const { updateCirculate, queryUserList, queryDetail, deleteUser, modifyUser } =
-  services.UserController;
+const {
+  updateCirculate,
+  queryUserList,
+  queryDetail,
+  authentication,
+  modifyUser,
+} = services.UserController;
 
 export default () => {
   const URlparams = useParams();
+  const [id, setId] = useState(1);
   useEffect(() => {
     console.log('location=>', '---', URlparams);
+    let _id = parseInt(URlparams.id, 10);
+    setId(_id);
   }, []);
+  useEffect(() => {
+    const center = new qq.maps.LatLng(39.916527, 116.397128)
+    var map = new qq.maps.Map(document.getElementById('container'), {
+      // 地图的中心地理坐标。
+      center,
+      zoom: 11,
+      panControl: false, //平移控件的初始启用/停用状态。
+      zoomControl: false, //缩放控件的初始启用/停用状态。
+      scaleControl: false,
+    });
+    var marker = new qq.maps.Marker({
+      position: center,
+      map: map
+  });
+  }, []);
+
   const formRef = useRef<
     ProFormInstance<{
       name: string;
@@ -28,14 +51,12 @@ export default () => {
     }>
   >();
   const [readOnly, setReadOnly] = useState(true);
-
-  
+  const [open, setOpen] = useState(false);
 
   const handleSubimt = async () => {
     try {
       const val2 = await formRef.current?.validateFieldsReturnFormatValue?.();
       console.log('validateFieldsReturnFormatValue:', val2);
-      const id = parseInt(URlparams.id, 10) || 1;
       const params = {
         id,
         ...val2,
@@ -59,27 +80,53 @@ export default () => {
     // maxWidth: 'calc(50% - 8px)',
   };
   const siderStyle: React.CSSProperties = {
-    height: '600px',
-    textAlign: 'center',
+    // height: '600px',
+    textAlign: 'left',
+    padding: '10px',
+    borderRadius: '16px',
     lineHeight: '120px',
-    color: '#fff',
-    backgroundColor: 'lightblue',
+    color: 'black',
+    background: 'rgb(245,245,245)',
+    border: '2px solid #ccc',
     margin: '0 30px 0 0',
   };
 
+  const handleAuthentication = async (status) => {
+    const params = {
+      id,
+      status,
+    };
+    const { state } = await authentication(params);
+    if (state == 200) message.success('认证成功');
+    else message.error('认证失败');
+    setOpen(false);
+  };
 
   return (
     <Flex gap="middle" wrap="wrap">
-      <Layout style={layoutStyle}>
+      <Layout style={layoutStyle} title="123">
         <Sider width="25%" style={siderStyle}>
+          
+          <Button type="primary" onClick={() => setOpen(true)}>
+            认证
+          </Button>
+          <Modal
+            open={open}
+            onOk={() => handleAuthentication(1)}
+            onCancel={() => handleAuthentication(0)}
+            okText="认证"
+            cancelText="取消认证"
+          >
+            <p>是否通过认证</p>
+          </Modal>
           <ProDescriptions
             column={1}
-            // title="化州市家庭农场"
+            title="经营主体："
             // tooltip="包含了从服务器请求，columns等功能"
             request={async (params) => {
               console.log('request', { ...params });
               const { data, success, total } = await queryUserList({
-                nid: URlparams.id,
+                nid: id,
               });
               return {
                 data: data[0] || {},
@@ -153,9 +200,13 @@ export default () => {
               },
             ]}
           />
+          <div id="container" style={{ height: '200px' }}></div>
         </Sider>
         <Layout>
           <Content>
+            <Button type="primary" style={{ marginBottom: '30px' }}>
+              经营情况：
+            </Button>
             <ProForm<{
               name: string;
               company?: string;
@@ -207,7 +258,7 @@ export default () => {
               readonly={readOnly}
               request={async () => {
                 const { data, success } = await queryDetail({
-                  nid: URlparams.id,
+                  nid: id,
                 });
                 return data[0] || {};
               }}

@@ -2,3 +2,8 @@
 declare const APP_API_HOST: string;
 declare const APP_STORAGE_PREFIX: string;
 declare const UMI_ENV: string;
+declare global {
+  interface Window {
+    qq: any;
+  }
+}

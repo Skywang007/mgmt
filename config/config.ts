@@ -2,6 +2,10 @@ import { defineConfig } from '@umijs/max';
 import routes from './routes';
 
 export default defineConfig({
+  headScripts: [
+    //密钥要写自己的，就是刚刚复制的那个AK码
+    'https://map.qq.com/api/js?v=2.exp&key=ET2BZ-JZ6K5-ZUWIM-IWBNW-WGOB7-LFB42',
+  ],
   define: {
     APP_STORAGE_PREFIX: 'parsec-admin', // 缓存前缀
     APP_API_HOST: 'http://127.0.0.1:8088', // mock 地址一般是 apifox 本地测试环境地址
