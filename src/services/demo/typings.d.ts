@@ -37,6 +37,8 @@ declare namespace API {
     success?: boolean;
     errorMessage?: string;
     data?: UserInfo;
+    state?: any,
+    message?: string;
   }
 
   interface Result_string_ {

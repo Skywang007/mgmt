@@ -107,7 +107,33 @@ export async function addUser(
   body?: API.UserInfoVO,
   options?: { [key: string]: any },
 ) {
-  return request<API.Result_UserInfo_>('/api/v1/user', {
+  return request<API.Result_UserInfo_>('/api/v1/addCirculate', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+export async function addLand(
+  body?: API.UserInfoVO,
+  options?: { [key: string]: any },
+) {
+  return request<API.Result_UserInfo_>('/api/v1/addLand', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+export async function addFactory(
+  body?: API.UserInfoVO,
+  options?: { [key: string]: any },
+) {
+  return request<API.Result_UserInfo_>('/api/v1/addFactory', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -161,14 +187,50 @@ export async function deleteUser(
   params: {
     // path
     /** userId */
-    userId?: string;
+    nid?: string;
   },
   options?: { [key: string]: any },
 ) {
-  const { userId: param0 } = params;
-  return request<API.Result_string_>(`/api/v1/user/${param0}`, {
-    method: 'DELETE',
-    params: { ...params },
+  return request<API.Result_string_>(`/api/v1/deleteCirculate`, {
+    method: 'POST',
+    data: { ...params },
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    ...(options || {}),
+  });
+}
+export async function deleteLand(
+  params: {
+    // path
+    /** userId */
+    nid?: string;
+  },
+  options?: { [key: string]: any },
+) {
+  return request<API.Result_string_>(`/api/v1/deleteLand`, {
+    method: 'POST',
+    data: { ...params },
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    ...(options || {}),
+  });
+}
+export async function deleteFactory(
+  params: {
+    // path
+    /** userId */
+    nid?: string;
+  },
+  options?: { [key: string]: any },
+) {
+  return request<API.Result_string_>(`/api/v1/deleteFactory`, {
+    method: 'POST',
+    data: { ...params },
+    headers: {
+      'Content-Type': 'application/json',
+    },
     ...(options || {}),
   });
 }

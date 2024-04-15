@@ -7,31 +7,13 @@ import {
   ProDescriptionsItemProps,
   ProTable,
 } from '@ant-design/pro-components';
-import { Button, Divider, Drawer, message } from 'antd';
+import { Button, Divider, Drawer, Popconfirm, message } from 'antd';
 import React, { useRef, useState } from 'react';
+import { history } from 'umi';
 import CreateForm from './components/CreateForm';
 import UpdateForm, { FormValueType } from './components/UpdateForm';
-import { history } from 'umi';
 const { addUser, queryUserList, deleteUser, modifyUser } =
   services.UserController;
-
-/**
- * 添加节点
- * @param fields
- */
-const handleAdd = async (fields: API.UserInfo) => {
-  const hide = message.loading('正在添加');
-  try {
-    await addUser({ ...fields });
-    hide();
-    message.success('添加成功');
-    return true;
-  } catch (error) {
-    hide();
-    message.error('添加失败请重试！');
-    return false;
-  }
-};
 
 /**
  * 更新节点
@@ -61,27 +43,6 @@ const handleUpdate = async (fields: FormValueType) => {
   }
 };
 
-/**
- *  删除节点
- * @param selectedRows
- */
-const handleRemove = async (selectedRows: API.UserInfo[]) => {
-  const hide = message.loading('正在删除');
-  if (!selectedRows) return true;
-  try {
-    await deleteUser({
-      userId: selectedRows.find((row) => row.id)?.id || '',
-    });
-    hide();
-    message.success('删除成功，即将刷新');
-    return true;
-  } catch (error) {
-    hide();
-    message.error('删除失败，请重试');
-    return false;
-  }
-};
-
 const TableList: React.FC<unknown> = () => {
   const [createModalVisible, handleModalVisible] = useState<boolean>(false);
   const [updateModalVisible, handleUpdateModalVisible] =
@@ -91,16 +52,55 @@ const TableList: React.FC<unknown> = () => {
   const [row, setRow] = useState<API.UserInfo>();
   const [selectedRowsState, setSelectedRows] = useState<API.UserInfo[]>([]);
 
+  const deleteConfirm = async (_: any, record: any) => {
+    const hide = message.loading('正在删除');
+    if (!record) return true;
+    try {
+      const { nid } = record;
+      await deleteUser({ nid });
+      hide();
+      message.success('删除成功');
+      actionRef.current?.reload();
+      return true;
+    } catch (error) {
+      hide();
+      message.error('删除失败，请重试');
+      return false;
+    }
+  };
+  const deleteCancel = (_: any, record: any) => {};
+
+  const handleAdd = async (fields: API.UserInfo) => {
+    const hide = message.loading('正在添加');
+    try {
+      const { state }=await addUser({ ...fields });
+      hide();
+      if (state == 200) {
+        message.success('添加成功');
+        actionRef.current?.reload();
+        return true;
+      } else {
+        message.error('添加失败请重试！');
+        return false
+      }
+    } catch (error) {
+      hide();
+      message.error('添加失败请重试！');
+      return false;
+    }
+  };
   const columns: ProDescriptionsItemProps<API.UserInfo>[] = [
     {
       title: 'id',
       dataIndex: 'nid',
-      search:false
+      search: false,
+      key: 'nid',
     },
     {
       title: '名称',
       dataIndex: 'title',
       tip: '名称是唯一的 key',
+      key: 'title',
       // formItemProps: {
       //   rules: [
       //     {
@@ -113,6 +113,7 @@ const TableList: React.FC<unknown> = () => {
     {
       title: '企业类型',
       dataIndex: 'qylx',
+      key: 'qylx',
       valueType: 'text',
       valueEnum: {
         种植户: { text: '种植户', status: '种植户' },
@@ -120,14 +121,18 @@ const TableList: React.FC<unknown> = () => {
         农民专业合作社: { text: '农民专业合作社', status: '农民专业合作社' },
         企业: { text: '企业', status: '企业' },
         有限责任公司: { text: '有限责任公司', status: '有限责任公司' },
+        家庭农场: { text: '家庭农场', status: '家庭农场' },
       },
     },
     {
       title: '企业性质',
       dataIndex: 'qyxz',
+      key: 'qyxz',
       valueEnum: {
         种植: { text: '种植', status: '种植' },
         种植和加工: { text: '种植和加工', status: '种植和加工' },
+        加工: { text: '加工', status: '加工' },
+        销售: { text: '销售', status: '销售' },
       },
     },
     {
@@ -135,6 +140,7 @@ const TableList: React.FC<unknown> = () => {
       dataIndex: 'status',
       hideInForm: true,
       search: false,
+      key: 'status',
       valueEnum: {
         0: { text: '否', status: '0' },
         1: { text: '是', status: '1' },
@@ -144,16 +150,19 @@ const TableList: React.FC<unknown> = () => {
       title: '联系人',
       dataIndex: 'lxr',
       valueType: 'text',
+      key: 'lxr',
       search: false,
     },
     {
       title: '联系电话',
       dataIndex: 'lxphone',
+      key: 'lxphone',
       valueType: 'text',
     },
     {
       title: '位置',
       dataIndex: 'address',
+      key: 'address',
       valueType: 'text',
       search: false,
       render: (data, rowdata) => {
@@ -163,12 +172,14 @@ const TableList: React.FC<unknown> = () => {
     {
       title: '排序',
       dataIndex: 'oid',
+      key: 'oid',
       valueType: 'text',
       search: false,
     },
     {
       title: '操作',
       dataIndex: 'option',
+      key: 'option',
       valueType: 'option',
       render: (_, record) => (
         <>
@@ -177,28 +188,27 @@ const TableList: React.FC<unknown> = () => {
               console.log('data=>', _, record);
               // handleUpdateModalVisible(true);
               // setStepFormValues(record);
-              history.push( `/table/detail/${record.nid}`)
+              history.push(`/table/detail/${record.nid}`);
             }}
           >
             详情
           </a>
           <Divider type="vertical" />
-          <a
-            onClick={() => {
-              console.log('data=>', _, record);
-
-              // handleUpdateModalVisible(true);
-              // setStepFormValues(record);
-            }}
+          <Popconfirm
+            title="是否确认删除"
+            onConfirm={() => deleteConfirm(_, record)}
+            onCancel={() => deleteCancel(_, record)}
+            okText="是"
+            cancelText="否"
           >
-            删除
-          </a>
+            <a>删除</a>
+          </Popconfirm>
           <Divider type="vertical" />
         </>
       ),
     },
   ];
-
+  const craeteColums: any = columns.slice(1);
   return (
     <PageContainer
       header={{
@@ -222,19 +232,22 @@ const TableList: React.FC<unknown> = () => {
           </Button>,
         ]}
         request={async (params, sorter, filter) => {
-          console.log('request', {...params});
-          const { data, success,total } = await queryUserList({
+          console.log('request', { ...params });
+          const { data, success, total } = await queryUserList({
             ...params,
           });
           return {
             data: data || [],
             success,
-            total:total
+            total: total,
           };
         }}
         columns={columns as any}
         rowSelection={{
-          onChange: (_, selectedRows) => setSelectedRows(selectedRows),
+          onChange: (_, selectedRows) => {
+            console.log('selectedRows', selectedRows);
+            setSelectedRows(selectedRows);
+          },
         }}
       />
       {selectedRowsState?.length > 0 && (
@@ -249,7 +262,7 @@ const TableList: React.FC<unknown> = () => {
         >
           <Button
             onClick={async () => {
-              await handleRemove(selectedRowsState);
+              // await handleRemove(selectedRowsState);
               setSelectedRows([]);
               actionRef.current?.reloadAndRest?.();
             }}
@@ -265,17 +278,18 @@ const TableList: React.FC<unknown> = () => {
       >
         <ProTable<API.UserInfo, API.UserInfo>
           onSubmit={async (value) => {
+            console.log(value, '--------value');
             const success = await handleAdd(value);
             if (success) {
               handleModalVisible(false);
-              if (actionRef.current) {
-                actionRef.current.reload();
-              }
+              // if (actionRef.current) {
+              //   actionRef.current.reload();
+              // }
             }
           }}
           rowKey="id"
           type="form"
-          columns={columns as any}
+          columns={craeteColums as any}
         />
       </CreateForm>
       {stepFormValues && Object.keys(stepFormValues).length ? (

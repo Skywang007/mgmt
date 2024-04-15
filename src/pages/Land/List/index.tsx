@@ -7,80 +7,13 @@ import {
   ProDescriptionsItemProps,
   ProTable,
 } from '@ant-design/pro-components';
-import { Button, Divider, Drawer, message } from 'antd';
+import { Button, Divider, Drawer, Popconfirm, message } from 'antd';
 import React, { useRef, useState } from 'react';
-import CreateForm from './components/CreateForm';
-import UpdateForm, { FormValueType } from './components/UpdateForm';
 import { history } from 'umi';
-const { addUser, queryUserList,queryLand, deleteUser, modifyUser } =
+import CreateForm from './components/CreateForm';
+import UpdateForm from './components/UpdateForm';
+const { addLand, queryUserList, queryLand, deleteLand, modifyUser } =
   services.UserController;
-
-/**
- * 添加节点
- * @param fields
- */
-const handleAdd = async (fields: API.UserInfo) => {
-  const hide = message.loading('正在添加');
-  try {
-    await addUser({ ...fields });
-    hide();
-    message.success('添加成功');
-    return true;
-  } catch (error) {
-    hide();
-    message.error('添加失败请重试！');
-    return false;
-  }
-};
-
-/**
- * 更新节点
- * @param fields
- */
-const handleUpdate = async (fields: FormValueType) => {
-  const hide = message.loading('正在配置');
-  try {
-    await modifyUser(
-      {
-        userId: fields.id || '',
-      },
-      {
-        name: fields.name || '',
-        nickName: fields.nickName || '',
-        email: fields.email || '',
-      },
-    );
-    hide();
-
-    message.success('配置成功');
-    return true;
-  } catch (error) {
-    hide();
-    message.error('配置失败请重试！');
-    return false;
-  }
-};
-
-/**
- *  删除节点
- * @param selectedRows
- */
-const handleRemove = async (selectedRows: API.UserInfo[]) => {
-  const hide = message.loading('正在删除');
-  if (!selectedRows) return true;
-  try {
-    await deleteUser({
-      userId: selectedRows.find((row) => row.id)?.id || '',
-    });
-    hide();
-    message.success('删除成功，即将刷新');
-    return true;
-  } catch (error) {
-    hide();
-    message.error('删除失败，请重试');
-    return false;
-  }
-};
 
 const TableList: React.FC<unknown> = () => {
   const [createModalVisible, handleModalVisible] = useState<boolean>(false);
@@ -90,6 +23,44 @@ const TableList: React.FC<unknown> = () => {
   const actionRef = useRef<ActionType>();
   const [row, setRow] = useState<API.UserInfo>();
   const [selectedRowsState, setSelectedRows] = useState<API.UserInfo[]>([]);
+
+  const deleteConfirm = async (_: any, record: any) => {
+    const hide = message.loading('正在删除');
+    if (!record) return true;
+    try {
+      const { nid } = record;
+      await deleteLand({ nid });
+      hide();
+      message.success('删除成功');
+      actionRef.current?.reload();
+      return true;
+    } catch (error) {
+      hide();
+      message.error('删除失败，请重试');
+      return false;
+    }
+  };
+  const deleteCancel = (_: any, record: any) => {};
+
+  const handleAdd = async (fields: API.UserInfo) => {
+    const hide = message.loading('正在添加');
+    try {
+      const { state } = await addLand({ ...fields });
+      hide();
+      if (state == 200) {
+        message.success('添加成功');
+        actionRef.current?.reload();
+        return true;
+      } else {
+        message.error('添加失败请重试！');
+        return false;
+      }
+    } catch (error) {
+      hide();
+      message.error('添加失败请重试！');
+      return false;
+    }
+  };
 
   const columns: ProDescriptionsItemProps<API.UserInfo>[] = [
     {
@@ -111,8 +82,8 @@ const TableList: React.FC<unknown> = () => {
     },
     {
       title: '用地来源',
-      key:'ydly',
-      dataIndex:"ydly",
+      key: 'ydly',
+      dataIndex: 'ydly',
       valueEnum: {
         自有: { text: '自有', status: '自有' },
         自有和承包: { text: '自有和承包', status: '自有和承包' },
@@ -141,8 +112,8 @@ const TableList: React.FC<unknown> = () => {
     {
       title: '操作',
       dataIndex: 'option',
-      valueType: 'option',
       key: 'option',
+      valueType: 'option',
       render: (_, record) => (
         <>
           <a
@@ -150,28 +121,27 @@ const TableList: React.FC<unknown> = () => {
               console.log('data=>', _, record);
               // handleUpdateModalVisible(true);
               // setStepFormValues(record);
-              history.push( `/land/detail/${record.nid}`)
+              history.push(`/table/detail/${record.nid}`);
             }}
           >
             详情
           </a>
           <Divider type="vertical" />
-          <a
-            onClick={() => {
-              console.log('data=>', _, record);
-
-              // handleUpdateModalVisible(true);
-              // setStepFormValues(record);
-            }}
+          <Popconfirm
+            title="是否确认删除"
+            onConfirm={() => deleteConfirm(_, record)}
+            onCancel={() => deleteCancel(_, record)}
+            okText="是"
+            cancelText="否"
           >
-            删除
-          </a>
+            <a>删除</a>
+          </Popconfirm>
           <Divider type="vertical" />
         </>
       ),
     },
   ];
-
+  const craeteColums: any = columns.slice(1);
   return (
     <PageContainer
       header={{
@@ -195,12 +165,12 @@ const TableList: React.FC<unknown> = () => {
           </Button>,
         ]}
         request={async (params) => {
-          const { data, success,total } = await queryLand({
-             ...params 
+          const { data, success, total } = await queryLand({
+            ...params,
           });
           return {
             data: data || [],
-            total:total,
+            total: total,
             success: success,
           };
         }}
@@ -221,9 +191,9 @@ const TableList: React.FC<unknown> = () => {
         >
           <Button
             onClick={async () => {
-              await handleRemove(selectedRowsState);
-              setSelectedRows([]);
-              actionRef.current?.reloadAndRest?.();
+              // await handleRemove(selectedRowsState);
+              // setSelectedRows([]);
+              // actionRef.current?.reloadAndRest?.();
             }}
           >
             批量删除
@@ -247,20 +217,20 @@ const TableList: React.FC<unknown> = () => {
           }}
           rowKey="id"
           type="form"
-          columns={columns as any}
+          columns={craeteColums as any}
         />
       </CreateForm>
       {stepFormValues && Object.keys(stepFormValues).length ? (
         <UpdateForm
           onSubmit={async (value) => {
-            const success = await handleUpdate(value);
-            if (success) {
-              handleUpdateModalVisible(false);
-              setStepFormValues({});
-              if (actionRef.current) {
-                actionRef.current.reload();
-              }
-            }
+            // const success = await handleUpdate(value);
+            // if (success) {
+            //   handleUpdateModalVisible(false);
+            //   setStepFormValues({});
+            //   if (actionRef.current) {
+            //     actionRef.current.reload();
+            //   }
+            // }
           }}
           onCancel={() => {
             handleUpdateModalVisible(false);
