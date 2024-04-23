@@ -49,7 +49,7 @@ export async function getAuthRules(options?: { [key: string]: any }) {
 
 /** 获取验证码(已完成) GET /public/authCode */
 export async function getPublicAuthCode(options?: { [key: string]: any }) {
-  return request<API.AuthCodeVo>('/public/authCode', {
+  return request<API.AuthCodeVo>('/api/v1/authCode', {
     method: 'GET',
     ...(options || {}),
   });
@@ -83,7 +83,7 @@ export async function authLogin(
   options?: { [key: string]: any },
 ) {
   return request<{ code?: number; data?: string; message?: string }>(
-    '/public/login',
+    '/api/v1/login',
     {
       method: 'POST',
       headers: {

@@ -106,7 +106,7 @@ export default () => {
             />
           </div>
         </div>
-        <div className="subtitle">秒差距中后台管理系统-重置密码</div>
+        <div className="subtitle">化橘红产业数据分析后台管理-重置密码</div>
       </div>
       <ProForm
         className="form-warp"

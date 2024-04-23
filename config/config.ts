@@ -76,9 +76,9 @@ export default defineConfig({
   metas: [
     {
       name: 'keywords',
-      content: 'parsec,parsec-admin,parsec-admin-next,秒差距中后台管理系统',
+      content: 'parsec,parsec-admin,parsec-admin-next,化橘红产业数据分析后台管理',
     },
-    { name: 'description', content: '秒差距中后台管理系统.' },
+    { name: 'description', content: '化橘红产业数据分析后台管理.' },
   ],
   // links: [{href: 'https://unpkg.com/nprogress@0.2.0/nprogress.css', rel: 'stylesheet', type:"text/css" }] // 样式需要重写所以禁用了
   scripts: [],

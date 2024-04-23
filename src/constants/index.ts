@@ -1,6 +1,6 @@
 import type { ListToolBarMenuItem } from '@ant-design/pro-table/es/components/ListToolBar/HeaderMenu';
 
-export const DEFAULT_NAME = '秒差距中后台管理系统';
+export const DEFAULT_NAME = '化橘红产业数据分析后台管理';
 export const TOKEN = 'token';
 export const LOGIN_ROLE = 'login_role';
 

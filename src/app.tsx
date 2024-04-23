@@ -63,7 +63,8 @@ export async function getInitialState(): Promise<{
     }
     return undefined;
   };
-
+  console.log('token__',storage.get('token'));
+  
   if (!storage.get(TOKEN)) {
     history.push(loginPath);
     return {
