@@ -39,6 +39,18 @@ export async function queryLand(
     // ...(options || {}),
   });
 }
+export async function queryUser(
+  params?: any,
+) {
+  return request<API.Result_PageInfo_UserInfo__>('/api/v1/queryUser', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: { ...params },
+    // ...(options || {}),
+  });
+}
 export async function queryFactoryList(
   params?: any,
 ) {
@@ -67,6 +79,18 @@ export async function updateFactory(
   params?: any,
 ) {
   return request<API.Result_PageInfo_UserInfo__>('/api/v1/updateFactory', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: { ...params },
+    // ...(options || {}),
+  });
+}
+export async function updataUser(
+  params?: any,
+) {
+  return request<API.Result_PageInfo_UserInfo__>('/api/v1/updataUser', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -108,6 +132,19 @@ export async function addUser(
   options?: { [key: string]: any },
 ) {
   return request<API.Result_UserInfo_>('/api/v1/addCirculate', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+export async function addUser2(
+  body?: API.UserInfoVO,
+  options?: { [key: string]: any },
+) {
+  return request<API.Result_UserInfo_>('/api/v1/addUser', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -192,6 +229,23 @@ export async function deleteUser(
   options?: { [key: string]: any },
 ) {
   return request<API.Result_string_>(`/api/v1/deleteCirculate`, {
+    method: 'POST',
+    data: { ...params },
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    ...(options || {}),
+  });
+}
+export async function deleteUser2(
+  params: {
+    // path
+    /** userId */
+    nid?: string;
+  },
+  options?: { [key: string]: any },
+) {
+  return request<API.Result_string_>(`/api/v1/deleteUser`, {
     method: 'POST',
     data: { ...params },
     headers: {

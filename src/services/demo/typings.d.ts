@@ -31,6 +31,7 @@ declare namespace API {
     errorMessage?: string;
     data?: any;
     total?: number;
+    state?:any
   }
 
   interface Result_UserInfo_ {
@@ -58,6 +59,7 @@ declare namespace API {
     email?: string;
     gender?: UserGenderEnum;
     nid?: string;
+    phone_number:?any
   }
 
   interface UserInfoVO {

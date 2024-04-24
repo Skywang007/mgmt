@@ -14,7 +14,7 @@ import type {ProFormInstance} from '@ant-design/pro-components';
 import {Button, Image, message, Modal, Result, Space, Spin} from 'antd';
 import {useRequest, useTitle} from 'ahooks';
 import {Link, history} from '@umijs/max';
-import {useCallback, useRef} from 'react';
+import {useCallback, useEffect, useRef,useState} from 'react';
 import {isMobile} from '@/utils';
 import {getPublicAuthCode, getSmsAuthCode, postPublicForgetPwd} from '@/services';
 import NProgress from 'nprogress';
@@ -22,13 +22,16 @@ import './index.less';
 
 
 export default () => {
-  useTitle('云南省核酸检测机构运营平台管理系统-重置密码');
+  useTitle('化橘红产业数据分析后台管理系统-重置密码');
   const formRef = useRef<ProFormInstance>();
-  const {loading, data, refresh} = useRequest<API.AuthCodeVo, any>(
-    getPublicAuthCode,
-    {refreshOnWindowFocus: true, onFinally: () => NProgress.done()},
-  );
-
+  const [loading, setLoading] = useState(false);
+  // const {loading, data, refresh} = useRequest<API.AuthCodeVo, any>(
+  //   getPublicAuthCode,
+  //   {refreshOnWindowFocus: true, onFinally: () => NProgress.done()},
+  // );
+  useEffect(() => {
+    NProgress.done()
+  }, []);
   const sendSmsAuthCode = useCallback(
     async (phone: string) => {
       const values = formRef.current?.getFieldsValue();
@@ -40,14 +43,14 @@ export default () => {
         message.error('请输入正确的手机号码');
         throw new Error('请输入正确的手机号码');
       }
-      if (!values['captchaCode']) {
-        message.error('请输入图片验证码！');
-        throw new Error('请输入图片验证码！');
-      }
+      // if (!values['captchaCode']) {
+      //   message.error('请输入图片验证码！');
+      //   throw new Error('请输入图片验证码！');
+      // }
       try {
         const res = await getSmsAuthCode({
           ...values,
-          clientCode: data?.clientCode || '',
+          // clientCode: data?.clientCode || '',
         });
         console.log('res', res);
         if (res.code === 0) {
@@ -59,7 +62,7 @@ export default () => {
         throw new Error('验证码发送失败！');
       }
     },
-    [data],
+    [],
   );
 
   const handleResetPassword = useCallback(async (formData: any) => {
@@ -142,7 +145,7 @@ export default () => {
             },
           ]}
         />
-        <ProFormText
+        {/* <ProFormText
           name="captchaCode"
           fieldProps={{
             size: 'large',
@@ -168,7 +171,7 @@ export default () => {
               message: '请输入验证码!',
             },
           ]}
-        />
+        /> */}
         <ProFormCaptcha
           fieldProps={{
             size: 'large',

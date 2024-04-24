@@ -109,6 +109,12 @@ export default [
     ],
   },
   {
+    name: '用户管理',
+    path: '/user',
+    icon: 'IdcardOutlined',
+    component: './User',
+  },
+  {
     path: '/reset-password',
     component: './Me/ResetPassword',
     name: '修改密码',

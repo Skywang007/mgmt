@@ -12,6 +12,7 @@ import {
 import { Link, useModel } from '@umijs/max';
 import { useTitle } from 'ahooks';
 import { Tabs, message, theme } from 'antd';
+import NProgress from 'nprogress';
 
 import { useState } from 'react';
 
@@ -53,7 +54,8 @@ export default () => {
     if (state == 200) {
       storage.set(TOKEN, token);
       message.success(messages);
-      // window.location.replace('/');
+      window.location.replace('/');
+      NProgress.done()
       // await fetchUserInfo();
       // const urlParams = new URL(window.location.href).searchParams;
       // if (
