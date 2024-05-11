@@ -94,6 +94,38 @@ export async function authLogin(
     },
   );
 }
+export async function loginByCode(
+  body: API.AuthLoginVo,
+  options?: { [key: string]: any },
+) {
+  return request<{ code?: number; data?: string; message?: string }>(
+    '/api/v1/loginbycode',
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: body,
+      ...(options || {}),
+    },
+  );
+}
+export async function getlogincode(
+  body: any,
+  options?: { [key: string]: any },
+) {
+  return request<{ code?: number; data?: string; message?: string }>(
+    '/api/v1/loginCode',
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: body,
+      ...(options || {}),
+    },
+  );
+}
 
 /** 获取短信验证码 阿里云短信服务 POST /public/sms/auth/code */
 export async function getSmsAuthCode (

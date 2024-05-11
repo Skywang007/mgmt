@@ -10,7 +10,7 @@ const { Header, Footer, Sider, Content } = Layout;
 
 import services from '@/services/demo';
 import { useEffect, useRef, useState } from 'react';
-import { useParams } from 'umi';
+import { useParams,history } from 'umi';
 const {
   updateCirculate,
   queryUserList,
@@ -22,13 +22,14 @@ const {
 export default () => {
   const URlparams = useParams();
   const [id, setId] = useState(1);
+  const [lat, setLat] = useState(39.916527);
+  const [lng, setLng] = useState(116.397128);
   useEffect(() => {
-    console.log('location=>', '---', URlparams);
     let _id = parseInt(URlparams.id, 10);
     setId(_id);
   }, []);
   useEffect(() => {
-    const center = new qq.maps.LatLng(39.916527, 116.397128)
+    const center = new qq.maps.LatLng(lat, lng)
     var map = new qq.maps.Map(document.getElementById('container'), {
       // 地图的中心地理坐标。
       center,
@@ -41,7 +42,7 @@ export default () => {
       position: center,
       map: map
   });
-  }, []);
+  }, [lat,lng]);
 
   const formRef = useRef<
     ProFormInstance<{
@@ -124,10 +125,12 @@ export default () => {
             title="经营主体："
             // tooltip="包含了从服务器请求，columns等功能"
             request={async (params) => {
-              console.log('request', { ...params });
+              let nid = parseInt(URlparams.id, 10);
               const { data, success, total } = await queryUserList({
-                nid: id,
+                nid: nid,
               });
+              setLat(data[0].lat);
+              setLng(data[0].lng);
               return {
                 data: data[0] || {},
                 success,
@@ -257,8 +260,9 @@ export default () => {
               formKey="base-form-use-demo"
               readonly={readOnly}
               request={async () => {
+                let nid = parseInt(URlparams.id, 10);
                 const { data, success } = await queryDetail({
-                  nid: id,
+                  nid: nid,
                 });
                 return data[0] || {};
               }}

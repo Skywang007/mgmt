@@ -32,6 +32,7 @@ export default [
     path: '/access',
     icon: 'SafetyOutlined',
     component: './Access',
+    hideInMenu: true,
   },
   // {
   //   name: '经营主体',
@@ -120,26 +121,26 @@ export default [
     name: '修改密码',
     hideInMenu: true,
   },
-  {
-    name: '我的账号',
-    path: '/me',
-    icon: 'IdcardOutlined',
-    routes: [
-      { path: '/me', redirect: '/me/account' },
-      {
-        path: '/me/account',
-        component: './Me/Account',
-        name: '我的账号',
-        exact: true,
-      },
-      {
-        path: '/me/reset-password',
-        component: './Me/ResetPassword',
-        name: '修改密码',
-        exact: true,
-      },
-    ],
-  },
+  // {
+  //   name: '我的账号',
+  //   path: '/me',
+  //   icon: 'IdcardOutlined',
+  //   routes: [
+  //     { path: '/me', redirect: '/me/account' },
+  //     {
+  //       path: '/me/account',
+  //       component: './Me/Account',
+  //       name: '我的账号',
+  //       exact: true,
+  //     },
+  //     {
+  //       path: '/me/reset-password',
+  //       component: './Me/ResetPassword',
+  //       name: '修改密码',
+  //       exact: true,
+  //     },
+  //   ],
+  // },
   {
     path: '/',
     redirect: '/home',

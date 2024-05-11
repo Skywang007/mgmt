@@ -118,10 +118,7 @@ const TableList: React.FC<unknown> = () => {
         <>
           <a
             onClick={() => {
-              console.log('data=>', _, record);
-              // handleUpdateModalVisible(true);
-              // setStepFormValues(record);
-              history.push(`/table/detail/${record.nid}`);
+              history.push(`/land/detail/${record.nid}`);
             }}
           >
             详情
@@ -145,7 +142,7 @@ const TableList: React.FC<unknown> = () => {
   return (
     <PageContainer
       header={{
-        title: '加工厂管理',
+        title: '地块管理',
       }}
     >
       <ProTable<API.UserInfo>

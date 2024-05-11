@@ -1,6 +1,6 @@
 import logo from '@/assets/parsec-logo.svg';
 import { TOKEN } from '@/constants';
-import { authLogin } from '@/services';
+import { authLogin, getlogincode,loginByCode } from '@/services';
 import storage from '@/utils/storage';
 import { LockOutlined, MobileOutlined, UserOutlined } from '@ant-design/icons';
 import {
@@ -28,9 +28,10 @@ export default () => {
   //     onFinally: () => NProgress.done(),
   //   },
   // );
-  console.log('initialState', initialState);
+  NProgress.done();
 
   const [loginType, setLoginType] = useState<LoginType>('phone');
+  const [phoneNumber, setPhoneNumber] = useState();
   const { token } = theme.useToken();
 
   const fetchUserInfo = async () => {
@@ -44,18 +45,27 @@ export default () => {
   };
 
   const handleLogin = async (formData: any) => {
-    const loginRes = await authLogin({
-      ...formData,
-      loginType,
-    }).catch(() => {
-      // refresh(); // 刷新图片验证码
-    });
-    const { message: messages, state, token = '' } = loginRes;
+    let result:any  = {}
+    if (loginType == 'phone') {
+      console.log(formData,'phone');
+      
+      result = await loginByCode({
+        ...formData,
+      });
+    } else {
+      result = await authLogin({
+        ...formData,
+      }).catch(() => {
+        // refresh(); // 刷新图片验证码
+      });
+    }
+    
+    const { message: messages, state, token = '' } = result;
     if (state == 200) {
       storage.set(TOKEN, token);
       message.success(messages);
       window.location.replace('/');
-      NProgress.done()
+      NProgress.done();
       // await fetchUserInfo();
       // const urlParams = new URL(window.location.href).searchParams;
       // if (
@@ -66,7 +76,7 @@ export default () => {
       // } else {
       //   window.location.replace('/');
       // }
-    } else if (state == 201 || state == 202) {
+    } else if (state == 201 || state == 202 || state == 0) {
       message.error(messages || '登录失败！');
     }
 
@@ -102,6 +112,9 @@ export default () => {
         title={(<span>HI~</span>) as any}
         subTitle="欢迎使用化橘红产业数据分析后台管理"
         onFinish={handleLogin}
+        onValuesChange={(_, allValues) => {
+          setPhoneNumber(allValues.phoneNumber)
+        }}
       >
         <Tabs
           centered
@@ -205,7 +218,7 @@ export default () => {
                 }
                 return '获取验证码';
               }}
-              name="captcha"
+              name="code"
               rules={[
                 {
                   required: true,
@@ -213,7 +226,8 @@ export default () => {
                 },
               ]}
               onGetCaptcha={async () => {
-                message.success('获取验证码成功！验证码为：1234');
+                console.log('获取验证码',phoneNumber);
+                const data = await getlogincode({ phoneNumber: phoneNumber });
               }}
             />
           </>
